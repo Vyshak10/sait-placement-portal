@@ -111,6 +111,16 @@ const LandingPage = () => {
             >
               Log In
             </Button>
+            <Button 
+              variant="text" 
+              color="primary" 
+              component={Link} 
+              to="/admin/login"
+              size={isMobile ? "small" : "medium"}
+              sx={{ ml: 1 }}
+            >
+              Admin
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

@@ -13,6 +13,8 @@ import CompanyAuth from './components/auth/CompanyAuth';
 import Register from './components/auth/Register';
 import LandingPage from './components/landing/LandingPage';
 import AuthRouter from './components/auth/AuthRouter';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
 
 // Create a base theme with our palette
 let theme = createTheme({
@@ -242,6 +244,47 @@ const CompanyRoute = ({ children }) => {
   return children;
 };
 
+// Add AdminRoute component
+const AdminRoute = ({ children }) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const adminSession = localStorage.getItem('adminSession');
+      if (!adminSession) {
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const parsedSession = JSON.parse(adminSession);
+        if (parsedSession && parsedSession.isAdmin) {
+          setIsAdmin(true);
+        } else {
+          localStorage.removeItem('adminSession');
+          setIsAdmin(false);
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+        setIsAdmin(false);
+      }
+      setLoading(false);
+    };
+
+    checkAdmin();
+  }, []);
+
+  if (loading) return null;
+
+  if (!isAdmin) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return children;
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -262,6 +305,18 @@ const router = createBrowserRouter([
   {
     path: "/company/auth",
     element: <CompanyAuth />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <AdminRoute>
+        <AdminDashboard />
+      </AdminRoute>
+    ),
   },
   {
     path: "/student",
