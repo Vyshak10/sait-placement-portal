@@ -5,6 +5,8 @@ import {
   Paper,
   Typography,
   Container,
+  AppBar,
+  Toolbar,
   Drawer,
   List,
   ListItem,
@@ -15,30 +17,38 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import {
+  Menu as MenuIcon,
   Dashboard as DashboardIcon,
   Person as PersonIcon,
   Work as WorkIcon,
   Assessment as AssessmentIcon,
   Settings as SettingsIcon,
+  ExitToApp as LogoutIcon,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../common/Navbar';
 
 const drawerWidth = 240;
 
 function WireframeLayout() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // Add logout logic here
-    navigate('/');
-  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Navbar onMenuClick={handleLogout} title="SAIT Placement Portal" />
+      {/* Header */}
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            edge="start"
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            SAIT Placement Portal
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
         {/* Sidebar */}
@@ -53,7 +63,7 @@ function WireframeLayout() {
             },
           }}
         >
-          <Toolbar /> {/* Spacer for fixed navbar */}
+          <Toolbar />
           <List>
             <ListItem button>
               <ListItemIcon><DashboardIcon /></ListItemIcon>

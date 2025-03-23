@@ -12,20 +12,14 @@ import {
   useMediaQuery,
   Divider
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import SchoolIcon from '@mui/icons-material/School';
 import BusinessIcon from '@mui/icons-material/Business';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Navbar from '../common/Navbar';
 
 const AuthRouter = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    navigate('/');
-  };
 
   return (
     <Box 
@@ -36,8 +30,6 @@ const AuthRouter = () => {
         bgcolor: '#f5f5f5'
       }}
     >
-      <Navbar onMenuClick={handleLogout} title="SAIT Placement Portal" />
-      
       <Container 
         maxWidth="md" 
         sx={{ 
@@ -46,8 +38,7 @@ const AuthRouter = () => {
           flexDirection: 'column',
           flexGrow: 1, 
           alignItems: 'center', 
-          justifyContent: 'center',
-          mt: '64px' // Add margin top to account for fixed navbar
+          justifyContent: 'center'
         }}
       >
         <Paper 
@@ -210,22 +201,22 @@ const AuthRouter = () => {
                   <Box component="ul" sx={{ pl: 2, mb: 3, flexGrow: 1 }}>
                     <li>
                       <Typography variant="body2" sx={{ mb: 1 }}>
-                        Post job opportunities
+                        Create and manage your company profile
                       </Typography>
                     </li>
                     <li>
                       <Typography variant="body2" sx={{ mb: 1 }}>
-                        Review student applications
+                        Post job openings and requirements
                       </Typography>
                     </li>
                     <li>
                       <Typography variant="body2" sx={{ mb: 1 }}>
-                        Connect with potential candidates
+                        Review applications from qualified students
                       </Typography>
                     </li>
                     <li>
                       <Typography variant="body2">
-                        Manage your company profile
+                        Manage the hiring process through our platform
                       </Typography>
                     </li>
                   </Box>
@@ -235,7 +226,7 @@ const AuthRouter = () => {
                       color="secondary" 
                       fullWidth
                       component={Link}
-                      to="/company-auth"
+                      to="/company/auth"
                       size={isMobile ? "small" : "medium"}
                     >
                       Company Login
@@ -245,7 +236,7 @@ const AuthRouter = () => {
                       color="secondary" 
                       fullWidth
                       component={Link}
-                      to="/company-register"
+                      to="/company/auth"
                       size={isMobile ? "small" : "medium"}
                     >
                       Register as Company
@@ -259,6 +250,6 @@ const AuthRouter = () => {
       </Container>
     </Box>
   );
-}
+};
 
 export default AuthRouter; 

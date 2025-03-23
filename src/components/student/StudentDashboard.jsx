@@ -36,8 +36,7 @@ import {
   styled,
   AppBar,
   Toolbar,
-  Container,
-  Drawer
+  Container
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -64,7 +63,6 @@ import { extractTextFromPDF, validatePDFFile, findSkillsInContext } from '../../
 import { Link } from 'react-router-dom';
 import { applyToJob, getApplicationStatus, getStudentApplications } from '../../services/applicationService';
 import { updateJobApplicationsSchema } from '../../services/updateSchemaService';
-import Navbar from '../common/Navbar';
 
 // Dummy alumni data for different companies
 const companyAlumni = {
@@ -2155,23 +2153,1266 @@ const StudentDashboard = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <Navbar onMenuClick={handleLogout} title="Student Dashboard" />
-      <Drawer
-        // ... existing drawer code ...
-      </Drawer>
-      <Box
-        component="main"
-                              sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          mt: '64px', // Add margin top to account for the fixed navbar
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      {/* Header with gradient */}
+      <StyledAppBar position="static">
+        <Toolbar>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SchoolIcon sx={{ color: '#ffffff' }} />
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: '#ffffff' }}>
+              Student Dashboard
+            </Typography>
+          </Box>
+          <IconButton color="inherit" onClick={handleLogout}>
+            <LogoutIcon />
+          </IconButton>
+        </Toolbar>
+      </StyledAppBar>
+
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Paper sx={{ p: isMobile ? 2 : 3, height: '100%' }}>
+          <StyledTabs 
+            value={activeTab} 
+            onChange={handleTabChange} 
+            variant={isMobile ? "fullWidth" : "standard"}
+          >
+            <Tab 
+              icon={<WorkIcon />} 
+              iconPosition="start"
+              label={isMobile ? "" : "Job Matches"} 
+              aria-label="Job Matches"
+              sx={{ 
+                minWidth: isMobile ? '0' : '160px',
+                '&.Mui-selected': {
+                  background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.05) 0%, rgba(33, 150, 243, 0.05) 50%, rgba(66, 165, 245, 0.05) 100%)',
+                  borderRadius: '8px 8px 0 0',
+                }
+              }}
+            />
+            <Tab 
+              icon={<QuizIcon />} 
+              iconPosition="start"
+              label={isMobile ? "" : "Mock Test"} 
+              aria-label="Mock Test"
+              sx={{ 
+                minWidth: isMobile ? '0' : '160px',
+                '&.Mui-selected': {
+                  background: 'linear-gradient(135deg, rgba(26, 35, 126, 0.05) 0%, rgba(13, 71, 161, 0.05) 50%, rgba(1, 87, 155, 0.05) 100%)',
+                  borderRadius: '8px 8px 0 0',
+                }
+              }}
+            />
+            <Tab 
+              icon={<AccountCircleIcon />} 
+              iconPosition="start"
+              label={isMobile ? "" : "Profile"} 
+              aria-label="Profile"
+              sx={{ 
+                minWidth: isMobile ? '0' : '160px',
+                '&.Mui-selected': {
+                  background: 'linear-gradient(135deg, rgba(26, 35, 126, 0.05) 0%, rgba(13, 71, 161, 0.05) 50%, rgba(1, 87, 155, 0.05) 100%)',
+                  borderRadius: '8px 8px 0 0',
+                }
+              }}
+            />
+          </StyledTabs>
+
+          {/* Tab Content Container */}
+          <Box sx={{ 
+            mt: 2,
+            p: 2,
+            borderRadius: '0 8px 8px 8px',
+            background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.02) 0%, rgba(33, 150, 243, 0.02) 50%, rgba(66, 165, 245, 0.02) 100%)',
+            border: '1px solid rgba(25, 118, 210, 0.1)',
+          }}>
+            {/* Job Matches Tab Content */}
+            {activeTab === 0 && (
+              <Box>
+                <Grid container spacing={3}>
+                  {/* Left Column */}
+                  <Grid item xs={12} md={6}>
+                    {/* Resume Upload Section */}
+                    <StyledCard sx={{ mb: 3 }}>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Resume Upload
+                        </Typography>
+                        <Box sx={{ mb: 3 }}>
+                          <StyledCard 
+                            sx={{ 
+                              p: 2, 
+                              border: '2px dashed #ccc',
+                              backgroundColor: '#f8f8f8',
+                              transition: 'all 0.3s',
+                              '&:hover': {
+                                borderColor: 'primary.main',
+                                backgroundColor: '#f0f7ff'
+                              }
+                            }}>
+                            <input
+                              type="file"
+                              accept=".pdf"
+                              onChange={handleResumeUpload}
+                              style={{ display: 'none' }}
+                              id="resume-upload"
+                            />
+                            <label htmlFor="resume-upload">
+                              <StyledButton
+                                component="span"
+                                startIcon={<CloudUploadIcon />}
+                                fullWidth
+                                sx={{ 
+                                  mb: 1,
+                                  background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
+                                  '&:hover': {
+                                    background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)',
+                                  }
+                                }}
+                              >
+                                Upload Resume (PDF)
+                              </StyledButton>
+                            </label>
+                            <Typography variant="body2" color="text.secondary" align="center">
+                              Max size: 10MB, PDF format only
+                            </Typography>
+                          </StyledCard>
+                          {isAnalyzing && (
+                            <Box sx={{ mt: 2 }}>
+                              <LinearProgress />
+                              <Typography variant="body2" color="text.secondary" align="center">
+                                Analyzing Resume...
+                              </Typography>
+                            </Box>
+                          )}
+                          {resume && (
+                            <Box sx={{ mt: 2 }}>
+                              <Typography variant="body2" color="success.main">
+                                Resume uploaded: {resume.name}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                      </CardContent>
+                    </StyledCard>
+
+                    {/* Field Selection with Scores */}
+                    {Object.keys(fieldScores).length > 0 && (
+                      <StyledCard sx={{ mb: 3 }}>
+                        <CardContent>
+                          <Typography variant="h6" gutterBottom>
+                            Field Compatibility Scores
+                          </Typography>
+                          <Grid container spacing={2}>
+                            {availableFields.map((field) => (
+                              <Grid item xs={12} key={field}>
+                                <StyledCard 
+                                  sx={{ 
+                                    cursor: 'pointer',
+                                    bgcolor: field === selectedField ? 'primary.light' : 'background.paper',
+                                    background: field === selectedField ? 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)' : 'background.paper',
+                                    color: field === selectedField ? 'white' : 'text.primary',
+                                    '&:hover': { 
+                                      bgcolor: 'primary.light',
+                                      background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
+                                      color: 'white'
+                                    }
+                                  }}
+                                  onClick={() => handleFieldChange(field)}
+                                >
+                                  <CardContent>
+                                    <Typography variant="h6">{field}</Typography>
+                                    {fieldScores[field] !== undefined && (
+                                      <>
+                                        <LinearProgress 
+                                          variant="determinate" 
+                                          value={fieldScores[field]} 
+                                          sx={{ mt: 1, mb: 0.5 }}
+                                        />
+                                        <Typography variant="body2" color="text.secondary">
+                                          Compatibility: {Math.round(fieldScores[field])}%
+                                        </Typography>
+                                      </>
+                                    )}
+                                  </CardContent>
+                                </StyledCard>
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </CardContent>
+                      </StyledCard>
+                    )}
+                    
+                    {/* Resume Analysis */}
+                    {resumeAnalysis && (
+                      <StyledCard>
+                        <CardContent>
+                          <Typography variant="h6" gutterBottom>
+                            Resume Analysis
+                          </Typography>
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="subtitle2" gutterBottom>
+                              Detected Skills:
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {resumeAnalysis.skills.map((skill, index) => (
+                                <Chip key={index} label={skill} color="primary" />
+                              ))}
+                            </Box>
+                          </Box>
+                          {resumeAnalysis.missingEssential.length > 0 && (
+                            <Box sx={{ mb: 2 }}>
+                              <Typography variant="subtitle2" color="error" gutterBottom>
+                                Missing Essential Skills:
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                {resumeAnalysis.missingEssential.map((skill, index) => (
+                                  <Chip key={index} label={skill} color="error" variant="outlined" />
+                                ))}
+                              </Box>
+                            </Box>
+                          )}
+                        </CardContent>
+                      </StyledCard>
+                    )}
+                  </Grid>
+                  
+                  {/* Right Column - Matched Companies */}
+                  <Grid item xs={12} md={6}>
+                    <StyledCard sx={{ height: '100%' }}>
+                      <CardContent>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center',
+                          mb: 2 
+                        }}>
+                          <Typography variant="h6">
+                            Matched Companies ({matchedCompanies.length})
+                          </Typography>
+                          <Tooltip title="Companies are ranked based on skill match and field relevance">
+                            <IconButton size="small" sx={{ ml: 1 }}>
+                              <InfoIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                        
+                        {matchedCompanies.length > 0 ? (
+                          <Box sx={{ maxHeight: '700px', overflow: 'auto' }}>
+                            {matchedCompanies.map((company, index) => (
+                              <StyledCard 
+                                key={index}
+                                sx={{ 
+                                  mb: 2,
+                                  borderLeft: company.fieldRelevant ? '4px solid #4caf50' : 'none',
+                                  '&:hover': { 
+                                    boxShadow: 2,
+                                    transform: 'translateY(-2px)',
+                                    transition: 'all 0.3s'
+                                  }
+                                }}
+                              >
+                                <CardContent>
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                    <Typography variant="subtitle1" fontWeight="bold">
+                                      {company.company_name}
+                                    </Typography>
+                                    <Chip 
+                                      label={`${Math.round(company.matchScore)}% Match`}
+                                      color={company.matchScore > 70 ? "success" : "primary"}
+                                      variant="outlined"
+                                      size="small"
+                                    />
+                                  </Box>
+                                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                                    {company.industry} | {company.location}
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ mb: 1 }}>
+                                    {company.job_description}
+                                  </Typography>
+                                  
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Requirements:
+                                  </Typography>
+                                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                                    {(company.job_requirements || '').split(',').map((req, i) => {
+                                      const isMatched = company.matchedSkills?.includes(req.trim().toLowerCase());
+                                      return (
+                                        <Chip
+                                          key={i}
+                                          label={req.trim()}
+                                          color={isMatched ? "success" : "default"}
+                                          variant={isMatched ? "filled" : "outlined"}
+                                          size="small"
+                                        />
+                                      );
+                                    })}
+                                  </Box>
+                                  
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Typography variant="body2">
+                                      Salary: {company.salary_range || 'Not specified'}
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                      <StyledButton
+                                        size="small"
+                                        variant="outlined"
+                                        onClick={() => handleCustomizeResume(company)}
+                                      >
+                                        Customize Resume
+                                      </StyledButton>
+                                      <StyledButton
+                                        size="small"
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => handleApply(company.id, company.company_name)}
+                                        disabled={!!applicationStatuses[company.id]}
+                                        sx={{ 
+                                          background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
+                                          '&:hover': {
+                                            background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)',
+                                          },
+                                          '&.Mui-disabled': {
+                                            background: 'rgba(25, 118, 210, 0.12)',
+                                          }
+                                        }}
+                                      >
+                                        {applicationStatuses[company.id] ? 'Applied' : 'Apply Now'}
+                                      </StyledButton>
+                                    </Box>
+                                  </Box>
+                                </CardContent>
+                              </StyledCard>
+                            ))}
+                          </Box>
+                        ) : (
+                          <Box sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            py: 8
+                          }}>
+                            <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 2 }}>
+                              No matching companies found.
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" align="center">
+                              Try uploading your resume or adjusting your skills to find matching companies.
+                            </Typography>
+                          </Box>
+                        )}
+                      </CardContent>
+                    </StyledCard>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+
+            {/* Mock Test Tab (formerly Applications tab) */}
+            {activeTab === 1 && (
+              <Box>
+                <Typography variant="h6" gutterBottom>
+                  Available Mock Tests
+                </Typography>
+                <Grid container spacing={3}>
+                  {Object.entries(mockTests).map(([category, tests]) => (
+                    <Grid item xs={12} key={category}>
+                      <Typography variant="subtitle1" color="primary" gutterBottom>
+                        {category} Tests
+                      </Typography>
+                      <Grid container spacing={2}>
+                        {tests.map((test) => (
+                          <Grid item xs={12} sm={6} md={4} key={test.id}>
+                            <StyledCard 
+                              sx={{ 
+                                height: '100%',
+                                cursor: mockTestQuestions[test.id] ? 'pointer' : 'default',
+                                position: 'relative',
+                                '&:hover': mockTestQuestions[test.id] ? { 
+                                  boxShadow: 3,
+                                  transform: 'translateY(-2px)',
+                                  transition: 'all 0.3s'
+                                } : {}
+                              }}
+                              onClick={() => mockTestQuestions[test.id] ? handleTestSelect(test) : null}
+                            >
+                              {!mockTestQuestions[test.id] && (
+                                <Box 
+                                  sx={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    backgroundColor: 'rgba(0,0,0,0.1)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    zIndex: 1
+                                  }}
+                                >
+                                  <Chip 
+                                    label="Coming Soon" 
+                                    color="primary" 
+                                    variant="outlined"
+                                  />
+                                </Box>
+                              )}
+                              <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                  {test.name}
+                                </Typography>
+                                <Divider sx={{ my: 1 }} />
+                                <Typography variant="body2" color="text.secondary">
+                                  Duration: {test.duration}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                  Questions: {mockTestQuestions[test.id] ? mockTestQuestions[test.id].length : test.questions}
+                                </Typography>
+                                {mockTestQuestions[test.id] && (
+                                  <StyledButton 
+                                    size="small" 
+                                    sx={{ mt: 2 }}
+                                    fullWidth
+                                  >
+                                    Take Test
+                                  </StyledButton>
+                                )}
+                              </CardContent>
+                            </StyledCard>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+            
+            {/* Profile Tab Content */}
+            {activeTab === 2 && (
+              <Box>
+                <Grid container spacing={3}>
+                  {/* Student Information Section */}
+                  <Grid item xs={12} md={8} sx={{ mx: 'auto' }}>
+                    <StyledCard sx={{ mb: 3 }}>
+                      <CardContent>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'center', 
+                          mb: 3 
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <StyledAvatar>
+                              {profile?.full_name?.charAt(0) || "S"}
+                            </StyledAvatar>
+                            <Box>
+                              <Typography variant="h5">{profile?.full_name || "Student Name"}</Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {profile?.department || "Department"}, Year {profile?.year_of_study || "?"}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <StyledButton 
+                            variant="outlined" 
+                            color="primary"
+                            onClick={() => setIsEditingProfile(!isEditingProfile)}
+                          >
+                            {isEditingProfile ? "Cancel" : "Edit Profile"}
+                          </StyledButton>
+                        </Box>
+                        
+                        <Divider sx={{ mb: 2 }} />
+                        
+                        {!isEditingProfile ? (
+                          <>
+                            <List>
+                              <ListItem>
+                                <BadgeIcon color="primary" sx={{ mr: 2 }} />
+                                <ListItemText 
+                                  primary="Student ID" 
+                                  secondary={profile?.student_id || "Not specified"} 
+                                />
+                              </ListItem>
+                              <ListItem>
+                                <EmailIcon color="primary" sx={{ mr: 2 }} />
+                                <ListItemText 
+                                  primary="Email" 
+                                  secondary={profile?.email || "Not specified"} 
+                                />
+                              </ListItem>
+                              <ListItem>
+                                <PhoneIcon color="primary" sx={{ mr: 2 }} />
+                                <ListItemText 
+                                  primary="Phone" 
+                                  secondary={profile?.phone || "Not specified"} 
+                                />
+                              </ListItem>
+                              <ListItem>
+                                <GradeIcon color="primary" sx={{ mr: 2 }} />
+                                <ListItemText 
+                                  primary="CGPA" 
+                                  secondary={profile?.cgpa || "Not specified"} 
+                                />
+                              </ListItem>
+                            </List>
+                            
+                            {profile?.skills && profile.skills.length > 0 && (
+                              <Box sx={{ mt: 2 }}>
+                                <Typography variant="subtitle1" gutterBottom>Skills</Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                  {profile.skills.map((skill, index) => (
+                                    <Chip 
+                                      key={index} 
+                                      label={skill} 
+                                      color="primary" 
+                                      variant="outlined" 
+                                    />
+                                  ))}
+                                </Box>
+                              </Box>
+                            )}
+                          </>
+                        ) : (
+                          // Edit Profile Form
+                          <Box component="form" noValidate>
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  Update Your Profile
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" paragraph>
+                                  Complete your profile to improve your chances of matching with companies.
+                                </Typography>
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <Box sx={{ mb: 2 }}>
+                                  <Typography variant="body2" gutterBottom>Student ID (unchangeable)</Typography>
+                                  <Typography variant="body1" fontWeight="medium">
+                                    {profileFormData.student_id || "Not available"}
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  label="Full Name"
+                                  name="full_name"
+                                  value={profileFormData.full_name || ''}
+                                  onChange={handleProfileChange}
+                                  error={!!profileErrors.full_name}
+                                  helperText={profileErrors.full_name}
+                                  required
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  label="Email"
+                                  name="email"
+                                  type="email"
+                                  value={profileFormData.email || ''}
+                                  onChange={handleProfileChange}
+                                  error={!!profileErrors.email}
+                                  helperText={profileErrors.email}
+                                  required
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  label="Phone Number"
+                                  name="phone"
+                                  value={profileFormData.phone || ''}
+                                  onChange={handleProfileChange}
+                                  error={!!profileErrors.phone}
+                                  helperText={profileErrors.phone}
+                                  required
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  label="Department"
+                                  name="department"
+                                  value={profileFormData.department || ''}
+                                  onChange={handleProfileChange}
+                                  error={!!profileErrors.department}
+                                  helperText={profileErrors.department}
+                                  required
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  label="Year of Study"
+                                  name="year_of_study"
+                                  type="number"
+                                  InputProps={{ inputProps: { min: 1, max: 5 } }}
+                                  value={profileFormData.year_of_study || ''}
+                                  onChange={handleProfileChange}
+                                  error={!!profileErrors.year_of_study}
+                                  helperText={profileErrors.year_of_study}
+                                  required
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  label="CGPA"
+                                  name="cgpa"
+                                  type="number"
+                                  InputProps={{ inputProps: { min: 0, max: 10, step: 0.01 } }}
+                                  value={profileFormData.cgpa || ''}
+                                  onChange={handleProfileChange}
+                                  error={!!profileErrors.cgpa}
+                                  helperText={profileErrors.cgpa || "Enter CGPA out of 10"}
+                                />
+                              </Grid>
+                              
+                              <Grid item xs={12}>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  Skills
+                                </Typography>
+                                {profileErrors.skills && (
+                                  <Typography variant="body2" color="error">
+                                    {profileErrors.skills}
+                                  </Typography>
+                                )}
+                                
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                                  {profileFormData.skills && profileFormData.skills.map((skill, index) => (
+                                    <Chip
+                                      key={index}
+                                      label={skill}
+                                      onDelete={() => handleSkillRemove(skill)}
+                                      color="primary"
+                                    />
+                                  ))}
+                                </Box>
+                                
+                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                  <TextField
+                                    label="Add a Skill"
+                                    name="newSkill"
+                                    value={profileFormData.newSkill || ''}
+                                    onChange={handleProfileChange}
+                                    size="small"
+                                    sx={{ flexGrow: 1 }}
+                                  />
+                                  <StyledButton 
+                                    size="small"
+                                    onClick={handleSkillAdd}
+                                  >
+                                    Add
+                                  </StyledButton>
+                                </Box>
+                              </Grid>
+                              
+                              <Grid item xs={12} sx={{ mt: 2 }}>
+                                <StyledButton
+                                  fullWidth
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={handleProfileSubmit}
+                                  disabled={isSubmittingProfile}
+                                  sx={{ 
+                                    py: 1.5,
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
+                                    '&:hover': {
+                                      background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)',
+                                    },
+                                    '&.Mui-disabled': {
+                                      background: 'rgba(25, 118, 210, 0.12)',
+                                    }
+                                  }}
+                                >
+                                  {isSubmittingProfile ? 'Updating Profile...' : 'Submit Profile & Enable Applications'}
+                                </StyledButton>
+                                <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
+                                  Submit your profile to enable job applications in the Job Matches tab
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        )}
+                      </CardContent>
+                    </StyledCard>
+                    
+                    <StyledCard>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Application Status
+                        </Typography>
+                        {Object.keys(applicationStatuses).length > 0 ? (
+                          <List>
+                            {Object.entries(applicationStatuses).map(([companyId, statusData], index) => {
+                              // Use the stored company name or find it in matched companies as fallback
+                              const companyName = statusData.companyName || 
+                                (matchedCompanies.find(c => c.id === parseInt(companyId))?.company_name || `Company ${index + 1}`);
+                              const status = typeof statusData === 'object' ? statusData.status : statusData; // Handle both old and new format
+                              
+                              return (
+                                <ListItem key={index} divider={index < Object.keys(applicationStatuses).length - 1}>
+                                  <ListItemText
+                                    primary={companyName}
+                                    secondary={`Status: ${status.charAt(0).toUpperCase() + status.slice(1)}`}
+                                  />
+                                  <Chip
+                                    label={status}
+                                    color={
+                                      status === 'accepted' ? 'success' :
+                                      status === 'rejected' ? 'error' :
+                                      'warning'
+                                    }
+                                    size="small"
+                                  />
+                                </ListItem>
+                              );
+                            })}
+                          </List>
+                        ) : (
+                          <Typography variant="body2" color="text.secondary">
+                            You haven't applied to any companies yet. Go to the Job Matches tab to apply.
+                          </Typography>
+                        )}
+                      </CardContent>
+                    </StyledCard>
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
+          </Box>
+        </Paper>
+      </Container>
+
+      {/* Company Customize Dialog */}
+      <Dialog
+        open={openCustomizeDialog}
+        onClose={() => setOpenCustomizeDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        fullScreen={isMobile}
+      >
+        <DialogTitle>Customize Resume for {selectedCompany?.company_name}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" paragraph>
+            Here are some suggestions to customize your resume for this position:
+          </Typography>
+          {selectedCompany?.matchedSkills && (
+            <>
+              <Typography variant="subtitle2" gutterBottom>
+                Highlight these matching skills:
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                {selectedCompany.matchedSkills.map((skill, index) => (
+                  <Chip key={index} label={skill} color="success" />
+                ))}
+              </Box>
+            </>
+          )}
+          {selectedCompany?.job_requirements && (
+            <>
+              <Typography variant="subtitle2" gutterBottom>
+                Consider adding experience with:
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {selectedCompany.job_requirements
+                  .split(',')
+                  .filter(req => !selectedCompany.matchedSkills?.includes(req.trim().toLowerCase()))
+                  .map((req, index) => (
+                    <Chip key={index} label={req.trim()} variant="outlined" />
+                  ))}
+              </Box>
+            </>
+          )}
+          
+          {/* Alumni Section */}
+          <Box sx={{ mt: 3, mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              Connect with Alumni from {selectedCompany?.company_name}
+            </Typography>
+            <Typography variant="body2" paragraph>
+              Reach out to these alumni currently working at {selectedCompany?.company_name} for insights and referrals:
+            </Typography>
+            
+            <Box sx={{ bgcolor: 'background.paper', borderRadius: 1, p: 2, boxShadow: 1 }}>
+              {/* Get alumni data for the selected company or use default if not found */}
+              {(companyAlumni[selectedCompany?.company_name] || companyAlumni.default).map((alumni, index) => (
+                <React.Fragment key={index}>
+                  {index > 0 && <Divider sx={{ my: 1.5 }} />}
+                  <Box sx={{ mb: index < 2 ? 2 : 0 }}>
+                    <Typography variant="subtitle2">{alumni.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Class of {alumni.graduationYear} • {alumni.role}
+                    </Typography>
+                    <Typography variant="body2">
+                      <Box component="span" sx={{ fontWeight: 'medium' }}>Email: </Box>
+                      <Box component="span" sx={{ color: 'primary.main' }}>{alumni.email}</Box>
+                    </Typography>
+                  </Box>
+                </React.Fragment>
+              ))}
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <StyledButton 
+            onClick={() => setOpenCustomizeDialog(false)}
+            fullWidth={isMobile}
+            size={isMobile ? "small" : "medium"}
+          >
+            Cancel
+          </StyledButton>
+          <StyledButton 
+            variant="contained" 
+            onClick={() => handleApply(selectedCompany.id, selectedCompany.company_name)}
+            fullWidth={isMobile}
+            size={isMobile ? "small" : "medium"}
+          >
+            Apply
+          </StyledButton>
+        </DialogActions>
+      </Dialog>
+
+      {/* Mock Test Dialog */}
+      <Dialog
+        open={openTestDialog}
+        onClose={() => setOpenTestDialog(false)}
+        maxWidth="sm"
+        fullWidth
+        fullScreen={isMobile}
+      >
+        <DialogTitle>Start Mock Test</DialogTitle>
+        <DialogContent>
+          {selectedTest && (
+            <>
+              <Typography variant="h6" gutterBottom>
+                {selectedTest.name}
+              </Typography>
+              <Typography variant="body1" paragraph>
+                This test will help you prepare for technical interviews and assess your knowledge.
+              </Typography>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Test Details:
+                </Typography>
+                <Typography variant="body2">
+                  • Duration: {selectedTest.duration}
+                </Typography>
+                <Typography variant="body2">
+                  • Number of Questions: {mockTestQuestions[selectedTest.id] ? mockTestQuestions[selectedTest.id].length : selectedTest.questions}
+                </Typography>
+                <Typography variant="body2">
+                  • No negative marking
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="warning.main">
+                Note: Make sure you have a stable internet connection before starting the test.
+              </Typography>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <StyledButton 
+            onClick={() => setOpenTestDialog(false)}
+            fullWidth={isMobile}
+            size={isMobile ? "small" : "medium"}
+          >
+            Cancel
+          </StyledButton>
+          <StyledButton 
+            variant="contained" 
+            onClick={startTest}
+            fullWidth={isMobile}
+            size={isMobile ? "small" : "medium"}
+            disabled={!mockTestQuestions[selectedTest?.id]}
+            sx={{
+              background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)',
+              },
+              '&:disabled': {
+                background: 'rgba(25, 118, 210, 0.12)',
+              }
+            }}
+          >
+            Start Test
+          </StyledButton>
+        </DialogActions>
+      </Dialog>
+
+      {/* Mock Test Interface */}
+      <Dialog
+        open={testInProgress}
+        fullScreen
+        PaperProps={{
+          style: {
+            backgroundColor: '#f5f5f5',
+            padding: '16px'
+          }
         }}
       >
-        {/* ... rest of the existing code ... */}
+        <Box sx={{ 
+          p: 2, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          height: '100%',
+          maxWidth: '800px',
+          mx: 'auto'
+        }}>
+          {!testCompleted ? (
+            // Active test UI
+            <>
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                mb: 3
+              }}>
+                <Typography variant="h5">
+                  {selectedTest.name}
+                </Typography>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  gap: 2
+                }}>
+                  <Box sx={{ 
+                    bgcolor: 'primary.main', 
+                    color: 'white', 
+                    py: 1, 
+                    px: 2, 
+                    borderRadius: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1
+                  }}>
+                    <AccessTimeIcon fontSize="small" />
+                    <Typography variant="body2">
+                      {formatTime(timeRemaining)}
+                    </Typography>
+                  </Box>
+                  <StyledButton 
+                    size="small"
+                    variant="outlined"
+                    color="error"
+                    onClick={completeTest}
+                  >
+                    Submit Test
+                  </StyledButton>
+                </Box>
+              </Box>
+
+              <LinearProgress 
+                variant="determinate" 
+                value={(activeQuestion + 1) / (mockTestQuestions[selectedTest?.id]?.length || 1) * 100} 
+                sx={{ mb: 2 }}
+              />
+
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                mb: 1
+              }}>
+                <Typography variant="body2">
+                  Question {activeQuestion + 1} of {mockTestQuestions[selectedTest?.id]?.length || 0}
+                </Typography>
+                <Typography variant="body2">
+                  {Object.keys(selectedAnswers).length} of {mockTestQuestions[selectedTest?.id]?.length || 0} answered
+                </Typography>
+              </Box>
+
+              <StyledPaper sx={{ p: 3, mb: 4, flexGrow: 1 }}>
+                <Typography variant="h6" gutterBottom>
+                  {mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.question || "Question not available"}
+                </Typography>
+                
+                <FormControl component="fieldset" sx={{ width: '100%', mt: 2 }}>
+                  <RadioGroup
+                    value={selectedAnswers[activeQuestion] !== undefined ? selectedAnswers[activeQuestion].toString() : ''}
+                    onChange={(e) => handleAnswerSelect(activeQuestion, parseInt(e.target.value))}
+                  >
+                    {mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.options?.map((option, index) => (
+                      <FormControlLabel
+                        key={index}
+                        value={index.toString()}
+                        control={<Radio />}
+                        label={option}
+                        sx={{ 
+                          display: 'block', 
+                          my: 1, 
+                          p: 1, 
+                          border: '1px solid #e0e0e0',
+                          borderRadius: 1,
+                          bgcolor: showAnswers[activeQuestion] && mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.correctAnswer === index ? 
+                            'rgba(76, 175, 80, 0.1)' : 'transparent',
+                          borderColor: showAnswers[activeQuestion] && mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.correctAnswer === index ? 
+                            'success.main' : '#e0e0e0',
+                          '&:hover': {
+                            bgcolor: 'rgba(0, 0, 0, 0.04)'
+                          }
+                        }}
+                      />
+                    )) || <Typography>No options available</Typography>}
+                  </RadioGroup>
+                </FormControl>
+                
+                {selectedAnswers[activeQuestion] !== undefined && (
+                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                    <StyledButton
+                      size="small"
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => toggleShowAnswer(activeQuestion)}
+                      startIcon={showAnswers[activeQuestion] ? <InfoIcon /> : <InfoIcon />}
+                    >
+                      {showAnswers[activeQuestion] ? "Hide Answer" : "Show Answer"}
+                    </StyledButton>
+                  </Box>
+                )}
+                
+                {showAnswers[activeQuestion] && (
+                  <StyledPaper sx={{ mt: 2, p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 1, border: '1px solid', borderColor: 'success.main' }}>
+                    <Typography variant="subtitle2" color="success.main">
+                      Correct Answer: {mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.options?.[mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.correctAnswer] || "Not available"}
+                    </Typography>
+                    
+                    {selectedAnswers[activeQuestion] === mockTestQuestions[selectedTest?.id]?.[activeQuestion]?.correctAnswer ? (
+                      <Typography variant="body2" color="success.main" sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
+                        <CheckCircleIcon fontSize="small" sx={{ mr: 0.5 }} /> Your answer is correct!
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="error.main" sx={{ mt: 1 }}>
+                        Your answer is incorrect. Consider reviewing this topic.
+                      </Typography>
+                    )}
+                  </StyledPaper>
+                )}
+              </StyledPaper>
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <StyledButton 
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => navigateQuestion('prev')} 
+                  disabled={activeQuestion === 0}
+                  startIcon={<ArrowBackIcon />}
+                >
+                  Previous
+                </StyledButton>
+                
+                {activeQuestion < (mockTestQuestions[selectedTest?.id]?.length - 1 || 0) ? (
+                  <StyledButton 
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigateQuestion('next')}
+                    endIcon={<ArrowForwardIcon />}
+                  >
+                    Next
+                  </StyledButton>
+                ) : (
+                  <StyledButton 
+                    size="small"
+                    variant="contained"
+                    color="success"
+                    onClick={completeTest}
+                    endIcon={<CheckCircleIcon />}
+                  >
+                    Finish Test
+                  </StyledButton>
+                )}
+              </Box>
+            </>
+          ) : (
+            // Test results UI
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" gutterBottom sx={{ mt: 4 }}>
+                Test Completed!
+              </Typography>
+              
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                my: 4 
+              }}>
+                <Box sx={{ 
+                  position: 'relative', 
+                  display: 'inline-flex',
+                  mb: 3
+                }}>
+                  <CircularProgress 
+                    variant="determinate" 
+                    value={testScore} 
+                    size={120} 
+                    thickness={5}
+                    sx={{
+                      color: testScore >= 70 ? 'success.main' : 
+                             testScore >= 40 ? 'warning.main' : 'error.main'
+                    }}
+                  />
+                  <Box sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <Typography
+                      variant="h4"
+                      component="div"
+                      color="text.secondary"
+                    >
+                      {`${testScore}%`}
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Typography variant="h6" gutterBottom>
+                  {testScore >= 70 ? 'Excellent!' : 
+                   testScore >= 40 ? 'Good effort!' : 'Keep practicing!'}
+                </Typography>
+                
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                  You answered {Object.keys(selectedAnswers).filter(idx => 
+                    mockTestQuestions[selectedTest?.id]?.[parseInt(idx)]?.correctAnswer === selectedAnswers[parseInt(idx)]
+                  ).length} out of {mockTestQuestions[selectedTest?.id]?.length || 0} questions correctly.
+                </Typography>
+                
+                {/* Answer Review Section */}
+                <Box sx={{ width: '100%', maxWidth: '600px', mb: 4, textAlign: 'left' }}>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 2, textAlign: 'center' }}>
+                    Review Your Answers
+                  </Typography>
+                  
+                  {mockTestQuestions[selectedTest?.id]?.map((question, index) => {
+                    const userAnswer = selectedAnswers[index];
+                    const isCorrect = userAnswer === question.correctAnswer;
+                    const userSelected = userAnswer !== undefined;
+                    
+                    return (
+                      <StyledPaper 
+                        key={index} 
+                        sx={{ 
+                          p: 2, 
+                          mb: 2,
+                          borderLeft: userSelected ? 
+                            (isCorrect ? '4px solid #4caf50' : '4px solid #f44336') : 
+                            '4px solid #ffeb3b'
+                        }}
+                      >
+                        <Typography variant="subtitle1" fontWeight="medium">
+                          Question {index + 1}: {question.question}
+                        </Typography>
+                        
+                        <Box sx={{ mt: 1 }}>
+                          {question.options.map((option, optIdx) => (
+                            <Box 
+                              key={optIdx} 
+                              sx={{ 
+                                p: 1, 
+                                mb: 0.5,
+                                borderRadius: 1,
+                                bgcolor: optIdx === question.correctAnswer ? 
+                                  'rgba(76, 175, 80, 0.1)' : 
+                                  (userAnswer === optIdx && userAnswer !== question.correctAnswer ? 'rgba(244, 67, 54, 0.1)' : 'transparent'),
+                                border: '1px solid',
+                                borderColor: optIdx === question.correctAnswer ? 
+                                  'success.main' : 
+                                  (userAnswer === optIdx && userAnswer !== question.correctAnswer ? 'error.main' : 'divider')
+                              }}
+                            >
+                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="body2">
+                                  {option}
+                                </Typography>
+                                
+                                {optIdx === question.correctAnswer && (
+                                  <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant="caption" color="success.main" sx={{ mr: 0.5, fontWeight: 'bold' }}>
+                                      CORRECT ANSWER
+                                    </Typography>
+                                    <CheckCircleIcon 
+                                      color="success" 
+                                      fontSize="small"
+                                    />
+                                  </Box>
+                                )}
+                              </Box>
                             </Box>
+                          ))}
+                        </Box>
+                        
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            mt: 1, 
+                            color: userSelected ? 
+                              (isCorrect ? 'success.main' : 'error.main') : 
+                              'warning.main',
+                            fontWeight: 'medium'
+                          }}
+                        >
+                          {userSelected ? 
+                            (isCorrect ? 'Correct answer!' : `Incorrect answer. The correct answer is: "${question.options[question.correctAnswer]}"`) : 
+                            'No answer selected'}
+                        </Typography>
+                      </StyledPaper>
+                    );
+                  })}
+                </Box>
+                
+                <StyledButton
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setTestInProgress(false);
+                    setActiveTab(1); // Switch back to mock test tab
+                  }}
+                  sx={{ 
+                    mt: 2,
+                    background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)',
+                    }
+                  }}
+                >
+                  Return to Dashboard
+                </StyledButton>
+              </Box>
+            </Box>
+          )}
+        </Box>
+      </Dialog>
+
+      {/* Add Notification Snackbar at the end of the component before the final closing tag */}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={() => setNotification({ ...notification, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: isMobile ? 'center' : 'right' }}
+      >
+        <Alert
+          onClose={() => setNotification({ ...notification, open: false })}
+          severity={notification.severity}
+          sx={{ width: '100%' }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

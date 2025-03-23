@@ -10,39 +10,18 @@ import {
   Link,
   Divider,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../common/Navbar';
 
 function AuthWireframe() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    navigate('/');
-  };
-
   return (
     <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'center',
         bgcolor: 'background.default',
       }}
     >
-      <Navbar onMenuClick={handleLogout} title="SAIT Placement Portal" />
-      
-      <Container 
-        maxWidth="sm" 
-        sx={{ 
-          py: 4, 
-          display: 'flex', 
-          flexDirection: 'column',
-          flexGrow: 1, 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          mt: '64px' // Add margin top to account for fixed navbar
-        }}
-      >
+      <Container maxWidth="sm">
         <Paper
           elevation={3}
           sx={{
@@ -50,7 +29,6 @@ function AuthWireframe() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%',
           }}
         >
           {/* Logo/Header */}
@@ -150,5 +128,4 @@ function AuthWireframe() {
   );
 }
 
-export default AuthWireframe; 
 export default AuthWireframe; 
