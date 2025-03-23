@@ -199,6 +199,7 @@ const CompanyDashboard = () => {
       console.log('Creating new job posting with data:', {
         ...newPosting,
         company_name: companyProfile.company_name,
+        company_id: companyProfile.id,
         posting_date: new Date().toISOString()
       });
 
@@ -206,13 +207,9 @@ const CompanyDashboard = () => {
       const jobData = {
         ...newPosting,
         company_name: companyProfile.company_name,
+        company_id: companyProfile.id,
         posting_date: new Date().toISOString()
       };
-
-      // Add company_id if available
-      if (companyProfile.id) {
-        jobData.company_id = companyProfile.id;
-      }
 
       // First check if the table exists by querying it
       const { count, error: checkError } = await supabase
@@ -867,6 +864,20 @@ const CompanyDashboard = () => {
                 <Typography variant="body1">CGPA: {selectedStudent.cgpa}</Typography>
                 <Typography variant="body1">Email: {selectedStudent.email}</Typography>
                 <Typography variant="body1">Phone: {selectedStudent.phone}</Typography>
+                {selectedStudent.linkedin_url && (
+                  <Typography variant="body1">
+                    LinkedIn: <a href={selectedStudent.linkedin_url} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2', textDecoration: 'none' }}>
+                      View Profile
+                    </a>
+                  </Typography>
+                )}
+                {selectedStudent.github_url && (
+                  <Typography variant="body1">
+                    GitHub: <a href={selectedStudent.github_url} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2', textDecoration: 'none' }}>
+                      View Profile
+                    </a>
+                  </Typography>
+                )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="h6">Skills</Typography>

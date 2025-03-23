@@ -28,7 +28,9 @@ const Register = () => {
     cgpa: '',
     phone: '',
     skills: '',
-    resume_url: ''
+    resume_url: '',
+    github_url: '',
+    linkedin_url: ''
   });
 
   const handleChange = (e) => {
@@ -60,6 +62,14 @@ const Register = () => {
       setError('CGPA must be between 0 and 10');
       return false;
     }
+    if (formData.github_url && !formData.github_url.includes('github.com')) {
+      setError('Please enter a valid GitHub URL');
+      return false;
+    }
+    if (formData.linkedin_url && !formData.linkedin_url.includes('linkedin.com')) {
+      setError('Please enter a valid LinkedIn URL');
+      return false;
+    }
     return true;
   };
 
@@ -71,10 +81,44 @@ const Register = () => {
     setError('');
 
     try {
-      // 1. Create auth user
+      // First check if student_id already exists
+      const { data: existingStudent, error: checkError } = await supabase
+        .from('students')
+        .select('student_id')
+        .eq('student_id', formData.student_id)
+        .single();
+
+      if (existingStudent) {
+        throw new Error('A student with this ID already exists');
+      }
+
+      // Check if email already exists
+      const { data: existingEmail, error: emailCheckError } = await supabase
+        .from('students')
+        .select('email')
+        .eq('email', formData.email)
+        .single();
+
+      if (existingEmail) {
+        throw new Error('This email is already registered');
+      }
+
+      // 1. Create auth user with metadata
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          data: {
+            student_id: formData.student_id,
+            full_name: formData.full_name,
+            department: formData.department,
+            year_of_study: formData.year_of_study,
+            cgpa: formData.cgpa,
+            phone: formData.phone,
+            github_url: formData.github_url,
+            linkedin_url: formData.linkedin_url
+          }
+        }
       });
 
       if (signUpError) {
@@ -100,16 +144,25 @@ const Register = () => {
           phone: formData.phone,
           skills: skillsArray,
           resume_url: formData.resume_url,
-          profile_submitted: false
+          github_url: formData.github_url,
+          linkedin_url: formData.linkedin_url,
+          profile_submitted: true
         });
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        // If profile creation fails, try to delete the auth user
+        if (authData?.user?.id) {
+          await supabase.auth.admin.deleteUser(authData.user.id);
+        }
+        throw new Error(profileError.message || 'Failed to create student profile');
+      }
 
       alert('Registration successful! Please check your email to verify your account.');
       navigate('/');
     } catch (error) {
       console.error('Registration error:', error);
-      setError(error.message);
+      setError(error.message || 'Registration failed. Please try again.');
+      
       // Keep button disabled for 60 seconds after a rate limit error
       if (error.message.includes('wait')) {
         setTimeout(() => setLoading(false), 60000);
@@ -270,6 +323,26 @@ const Register = () => {
                   value={formData.resume_url}
                   onChange={handleChange}
                   helperText="Link to your resume (Google Drive, Dropbox, etc.)"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="GitHub Profile URL"
+                  name="github_url"
+                  value={formData.github_url}
+                  onChange={handleChange}
+                  helperText="Your GitHub profile URL"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="LinkedIn Profile URL"
+                  name="linkedin_url"
+                  value={formData.linkedin_url}
+                  onChange={handleChange}
+                  helperText="Your LinkedIn profile URL"
                 />
               </Grid>
             </Grid>

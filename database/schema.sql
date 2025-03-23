@@ -35,13 +35,16 @@ CREATE TABLE companies (
 
 -- Job Postings table
 CREATE TABLE job_postings (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    company_id UUID REFERENCES companies(id),
     company_name TEXT NOT NULL,
-    job_requirements TEXT NOT NULL,
-    job_description TEXT NOT NULL,
+    job_description TEXT,
+    job_requirements TEXT,
     location TEXT,
     salary_range TEXT,
-    posting_date TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
+    posting_date TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
 );
 
 -- Job Applications table
