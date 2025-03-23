@@ -32,6 +32,12 @@ import {
   Assessment,
 } from '@mui/icons-material';
 import { studentTheme } from '../../theme/studentTheme';
+import {
+  RESUME_BUILDER_IMAGE,
+  JOB_APPLICATIONS_IMAGE,
+  SKILL_ASSESSMENT_IMAGE,
+  INTERNSHIP_PORTAL_IMAGE
+} from '../../assets/images';
 
 // Styled components
 const BackgroundContainer = styled(Box)(({ theme }) => ({
@@ -163,44 +169,49 @@ const SlidingFeatureBox = styled(Box)(({ theme, index }) => ({
   position: 'absolute',
   width: '100%',
   padding: '30px',
-  background: '#ffffff',
-  borderRadius: '20px',
-  boxShadow: '0 8px 32px rgba(25, 118, 210, 0.15)',
-  border: '1px solid rgba(25, 118, 210, 0.1)',
+  background: 'linear-gradient(to bottom, #ffffff, #f8f9fa)',
+  borderRadius: '24px',
+  boxShadow: '0 10px 40px rgba(25, 118, 210, 0.08)',
+  border: '1px solid rgba(25, 118, 210, 0.05)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '16px',
+  gap: '24px',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translate(-50%, 0) scale(1.02)',
+    boxShadow: '0 15px 50px rgba(25, 118, 210, 0.12)',
+  },
   '& .feature-icon': {
     background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)',
     borderRadius: '50%',
-    padding: '16px',
+    padding: '20px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 4px 12px rgba(25, 118, 210, 0.2)',
+    boxShadow: '0 8px 16px rgba(25, 118, 210, 0.2)',
     '& .MuiSvgIcon-root': {
       color: '#ffffff',
       fontSize: '32px'
     }
   },
-  animation: `slideIn 16s linear infinite`,
+  animation: `slideFeature 16s linear infinite`,
   animationDelay: `${index * -4}s`,
-  '@keyframes slideIn': {
-    '0%': {
+  '@keyframes slideFeature': {
+    '0%, 100%': {
       transform: 'translate(-50%, 100%)',
       opacity: 0,
     },
-    '8%': {
-      transform: 'translate(-50%, 0%)',
+    '3%, 22%': {
+      transform: 'translate(-50%, 0)',
       opacity: 1,
     },
-    '92%': {
-      transform: 'translate(-50%, 0%)',
-      opacity: 1,
-    },
-    '100%': {
+    '25%': {
       transform: 'translate(-50%, -100%)',
+      opacity: 0,
+    },
+    '28%, 100%': {
+      transform: 'translate(-50%, 100%)',
       opacity: 0,
     }
   },
@@ -209,10 +220,15 @@ const SlidingFeatureBox = styled(Box)(({ theme, index }) => ({
 
 const FeatureImage = styled('img')({
   width: '100%',
-  height: '200px',
+  height: '250px',
   objectFit: 'cover',
-  borderRadius: '8px',
-  marginBottom: '16px',
+  borderRadius: '16px',
+  marginBottom: '8px',
+  boxShadow: '0 8px 24px rgba(25, 118, 210, 0.1)',
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.02)',
+  },
 });
 
 const StudentAuth = () => {
@@ -275,25 +291,25 @@ const StudentAuth = () => {
       icon: <Assignment sx={{ fontSize: 40 }} />,
       title: "Resume Builder",
       description: "Create and manage professional resumes with our easy-to-use builder",
-      image: "/images/resume-builder.jpg"
+      image: RESUME_BUILDER_IMAGE
     },
     {
       icon: <BusinessCenter sx={{ fontSize: 40 }} />,
       title: "Job Applications",
       description: "Track and manage all your job applications in one place",
-      image: "/images/job-applications.jpg"
+      image: JOB_APPLICATIONS_IMAGE
     },
     {
-      icon: <EventNote sx={{ fontSize: 40 }} />,
-      title: "Interview Scheduler",
-      description: "Schedule and prepare for interviews with top companies",
-      image: "/images/interview-scheduler.jpg"
+      icon: <Assessment sx={{ fontSize: 40 }} />,
+      title: "Skill Assessment",
+      description: "Evaluate your technical and soft skills through comprehensive assessments to match with the right opportunities",
+      image: SKILL_ASSESSMENT_IMAGE
     },
     {
       icon: <Work sx={{ fontSize: 40 }} />,
       title: "Internship Portal",
       description: "Access exclusive internship opportunities from leading companies",
-      image: "/images/internship-portal.jpg"
+      image: INTERNSHIP_PORTAL_IMAGE
     },
   ];
 
@@ -490,22 +506,29 @@ const StudentAuth = () => {
           {/* Sliding Feature Boxes Container */}
           <Box
             sx={{
-              width: { xs: '90%', md: '60%' },
+              width: { xs: '100%', md: '60%' },
               ml: { xs: 0, md: 4 },
-              height: { xs: '400px', md: '80vh' },
+              height: { xs: '500px', md: '80vh' },
               position: 'relative',
               overflow: 'hidden',
-              display: { xs: 'none', md: 'flex' },
+              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              mt: { xs: 4, md: 0 },
+              mb: { xs: 4, md: 0 },
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(248,249,250,0.8))',
+              borderRadius: '30px',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(25, 118, 210, 0.1)',
             }}
           >
             <Box
               sx={{
                 width: '100%',
-                height: { xs: '400px', md: '80vh' },
+                height: { xs: '500px', md: '80vh' },
                 position: 'relative',
                 overflow: 'hidden',
+                padding: '20px',
               }}
             >
               {slidingFeatures.map((feature, index) => (
@@ -513,11 +536,24 @@ const StudentAuth = () => {
                   key={index} 
                   index={index}
                   sx={{
-                    width: '90%',
+                    width: { xs: '85%', md: '90%' },
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    '@media (max-width: 600px)': {
-                      padding: '20px',
+                    padding: { xs: '20px', sm: '25px', md: '35px' },
+                    '& .MuiTypography-h5': {
+                      fontSize: { xs: '1.3rem', sm: '1.5rem', md: '1.7rem' },
+                      fontWeight: 700,
+                      background: 'linear-gradient(135deg, #1976d2, #2196f3)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      marginBottom: '8px'
+                    },
+                    '& .MuiTypography-body1': {
+                      fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
+                      lineHeight: 1.6,
+                      color: 'rgba(0, 0, 0, 0.7)',
+                      maxWidth: '90%',
+                      textAlign: 'center'
                     }
                   }}
                 >
@@ -526,29 +562,31 @@ const StudentAuth = () => {
                     alt={feature.title}
                     loading="lazy"
                     sx={{
-                      height: { xs: '200px', md: '300px' },
+                      height: { xs: '200px', sm: '250px', md: '320px' },
+                      objectFit: 'cover',
+                      width: '100%'
                     }}
                   />
-                  <Box sx={{ color: '#1976d2' }}>
+                  <Box sx={{ 
+                    color: '#1976d2',
+                    background: 'white',
+                    borderRadius: '50%',
+                    padding: '15px',
+                    boxShadow: '0 8px 32px rgba(25, 118, 210, 0.15)',
+                    marginTop: '-40px',
+                    position: 'relative',
+                    zIndex: 2,
+                    '& .MuiSvgIcon-root': {
+                      fontSize: { xs: 35, sm: 40, md: 45 },
+                      color: '#1976d2'
+                    }
+                  }}>
                     {feature.icon}
                   </Box>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      color: '#1976d2',
-                      fontWeight: 600,
-                      textAlign: 'center',
-                    }}
-                  >
+                  <Typography variant="h5">
                     {feature.title}
                   </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: 'rgba(25, 118, 210, 0.8)',
-                      textAlign: 'center',
-                    }}
-                  >
+                  <Typography variant="body1">
                     {feature.description}
                   </Typography>
                 </SlidingFeatureBox>
