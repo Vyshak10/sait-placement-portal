@@ -405,7 +405,7 @@ const StudentDashboard = () => {
             return;
           }
           if (data) {
-            setProfile(data);
+          setProfile(data);
             // Initialize profile form data
             setProfileFormData({
               student_id: data.student_id,
@@ -2001,7 +2001,7 @@ const StudentDashboard = () => {
         message: 'Profile updated successfully!',
         severity: 'success'
       });
-
+      
     } catch (error) {
       console.error('Error updating profile:', error);
       setError(error.message);
@@ -2272,7 +2272,7 @@ const StudentDashboard = () => {
       <Navbar onMenuClick={handleLogout} title="Student Dashboard" />
       <Drawer
         variant="permanent"
-        sx={{
+            sx={{ 
           display: { xs: 'none', sm: 'block' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
         }}
@@ -2282,7 +2282,7 @@ const StudentDashboard = () => {
       </Drawer>
       <Box
         component="main"
-        sx={{
+            sx={{ 
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
@@ -2299,31 +2299,31 @@ const StudentDashboard = () => {
         {/* Job Matches Tab */}
         {activeTab === 0 && (
           <Box sx={{ mt: 3 }}>
-            {/* Resume Upload Section */}
+                {/* Resume Upload Section */}
             <StyledPaper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                 Upload Your Resume
-              </Typography>
-              <input
+                    </Typography>
+                        <input
                 accept="application/pdf"
-                style={{ display: 'none' }}
-                id="resume-upload"
+                          style={{ display: 'none' }}
+                          id="resume-upload"
                 type="file"
                 onChange={handleResumeUpload}
-              />
-              <label htmlFor="resume-upload">
+                        />
+                        <label htmlFor="resume-upload">
                 <StyledButton
-                  component="span"
-                  startIcon={<CloudUploadIcon />}
+                            component="span"
+                            startIcon={<CloudUploadIcon />}
                   disabled={isAnalyzing}
-                >
+                          >
                   {isAnalyzing ? 'Analyzing...' : 'Upload Resume (PDF)'}
                 </StyledButton>
-              </label>
-              {resume && (
+                        </label>
+                      {resume && (
                 <Typography variant="body2" sx={{ mt: 1 }}>
                   Uploaded: {resume.name}
-                </Typography>
+                          </Typography>
               )}
             </StyledPaper>
 
@@ -2332,45 +2332,45 @@ const StudentDashboard = () => {
               {/* Left Column - Fields Analysis */}
               <Grid item xs={12} md={4}>
                 <StyledPaper sx={{ p: 3, height: '100%' }}>
-                  <Typography variant="h6" gutterBottom>
+                      <Typography variant="h6" gutterBottom>
                     Field Analysis
-                  </Typography>
+                      </Typography>
                   {Object.keys(fieldScores).length > 0 ? (
                     <>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         {availableFields.map((field) => (
                           <StyledCard 
                             key={field} 
-                            sx={{ 
-                              cursor: 'pointer',
+                              sx={{ 
+                                cursor: 'pointer',
                               bgcolor: selectedField === field ? 'action.selected' : 'background.paper'
-                            }}
-                            onClick={() => handleFieldChange(field)}
-                          >
-                            <CardContent>
+                              }}
+                              onClick={() => handleFieldChange(field)}
+                            >
+                              <CardContent>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Typography variant="subtitle1">
                                   {field}
-                                </Typography>
+                                    </Typography>
                                 <Chip
                                   label={`${Math.round(fieldScores[field])}% Match`}
                                   color={fieldScores[field] > 70 ? "success" : "primary"}
                                   size="small"
                                 />
                               </Box>
-                            </CardContent>
+                              </CardContent>
                           </StyledCard>
                         ))}
                       </Box>
-                      
+                
                       {/* Field Details */}
-                      {resumeAnalysis && (
+                {resumeAnalysis && (
                         <Box sx={{ mt: 3 }}>
-                          <Typography variant="subtitle2" gutterBottom>
+                        <Typography variant="subtitle2" gutterBottom>
                             Matched Skills:
-                          </Typography>
+                        </Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                            {resumeAnalysis.skills.map((skill, index) => (
+                          {resumeAnalysis.skills.map((skill, index) => (
                               <Chip
                                 key={index}
                                 label={skill}
@@ -2378,8 +2378,8 @@ const StudentDashboard = () => {
                                 color="primary"
                                 variant="outlined"
                               />
-                            ))}
-                          </Box>
+                          ))}
+                        </Box>
                           
                           <Typography variant="subtitle2" gutterBottom>
                             Missing Essential Skills:
@@ -2405,13 +2405,13 @@ const StudentDashboard = () => {
                   )}
                 </StyledPaper>
               </Grid>
-
+              
               {/* Right Column - Matched Jobs */}
               <Grid item xs={12} md={8}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Typography variant="h6" gutterBottom>
                     Matched Jobs
-                  </Typography>
+                      </Typography>
                   
                   {/* Add search field in Job Matches tab */}
                   <Box sx={{ mb: 3 }}>
@@ -2434,44 +2434,44 @@ const StudentDashboard = () => {
                           ) : filteredCompanies.length > 0 ? (
                             filteredCompanies.map((job, index) => (
                               <StyledCard key={index} elevation={2}>
-                                <CardContent>
-                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                            <CardContent>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                                     <Box>
-                                      <Typography variant="subtitle1" fontWeight="bold">
+                                <Typography variant="subtitle1" fontWeight="bold">
                                         {job.company_name}
-                                      </Typography>
+                                </Typography>
                                       <Typography variant="caption" color="text.secondary">
                                         {job.source === 'company_profile' ? 'Company Profile' : 'Job Posting'}
                                       </Typography>
                                     </Box>
-                                    <Chip 
+                                <Chip 
                                       label={`${Math.round(job.matchScore)}% Match`}
                                       color={job.matchScore > 70 ? "success" : "primary"}
-                                      variant="outlined"
-                                      size="small"
-                                    />
-                                  </Box>
-                                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                                  variant="outlined"
+                                  size="small"
+                                />
+                              </Box>
+                              <Typography variant="body2" color="text.secondary" gutterBottom>
                                     {job.companies?.industry || 'Industry not specified'} | {job.location || 'Location not specified'}
-                                  </Typography>
-                                  <Typography variant="body2" sx={{ mb: 1 }}>
+                              </Typography>
+                              <Typography variant="body2" sx={{ mb: 1 }}>
                                     {job.job_description || 'No description provided'}
-                                  </Typography>
-                                  
-                                  <Typography variant="body2" fontWeight="medium">
-                                    Requirements:
-                                  </Typography>
-                                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
+                              </Typography>
+                              
+                              <Typography variant="body2" fontWeight="medium">
+                                Requirements:
+                              </Typography>
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
                                     {(job.job_requirements || '').split(',').map((req, idx) => {
                                       const reqTrimmed = req.trim();
                                       const isMatched = resumeAnalysis?.skills.some(
                                         skill => skill.toLowerCase() === reqTrimmed.toLowerCase()
                                       );
-                                      return (
-                                        <Chip
+                                  return (
+                                    <Chip
                                           key={idx}
                                           label={reqTrimmed}
-                                          size="small"
+                                      size="small"
                                           variant="outlined"
                                           sx={{
                                             borderColor: isMatched ? 'success.main' : 'error.main',
@@ -2480,41 +2480,41 @@ const StudentDashboard = () => {
                                               color: isMatched ? 'success.main' : 'error.main',
                                             }
                                           }}
-                                        />
-                                      );
-                                    })}
-                                  </Box>
-                                  
-                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography variant="body2">
+                                    />
+                                  );
+                                })}
+                              </Box>
+                              
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <Typography variant="body2">
                                       Salary: {job.salary_range || 'Not specified'}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
                                       <StyledButton
-                                        size="small"
-                                        variant="outlined"
+                                    size="small"
+                                    variant="outlined"
                                         onClick={() => handleCustomizeResume(job)}
-                                      >
-                                        Customize Resume
+                                  >
+                                    Customize Resume
                                       </StyledButton>
                                       <StyledButton
-                                        size="small"
-                                        variant="contained"
+                                    size="small"
+                                    variant="contained"
                                         onClick={() => handleApply(job.company_id, job.company_name)}
                                         disabled={!!applicationStatuses[job.company_id]}
-                                      >
+                                  >
                                         {applicationStatuses[job.company_id] ? 'Applied' : 'Apply Now'}
                                       </StyledButton>
-                                    </Box>
-                                  </Box>
-                                </CardContent>
+                                </Box>
+                              </Box>
+                            </CardContent>
                               </StyledCard>
                             ))
                           ) : (
                             <StyledPaper sx={{ p: 3, textAlign: 'center' }}>
                               <Typography variant="body1" color="text.secondary">
                                 {searchError || (companySearchQuery ? 'No companies match your search' : 'Upload your resume to see matched jobs')}
-                              </Typography>
+                        </Typography>
                             </StyledPaper>
                           )}
                         </Box>
@@ -2530,112 +2530,112 @@ const StudentDashboard = () => {
         {/* Mock Tests Tab */}
         {activeTab === 1 && (
           <Box sx={{ mt: 3 }}>
-            {Object.entries(mockTests).map(([category, tests]) => (
+              {Object.entries(mockTests).map(([category, tests]) => (
               <Box key={category} sx={{ mb: 4 }}>
                 <Typography variant="h6" gutterBottom>
-                  {category} Tests
-                </Typography>
-                <Grid container spacing={2}>
-                  {tests.map((test) => (
-                    <Grid item xs={12} sm={6} md={4} key={test.id}>
+                    {category} Tests
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {tests.map((test) => (
+                      <Grid item xs={12} sm={6} md={4} key={test.id}>
                       <StyledCard>
-                        <CardContent>
-                          <Typography variant="h6" gutterBottom>
-                            {test.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Duration: {test.duration}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
+                          <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                              {test.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Duration: {test.duration}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
                             Questions: {test.questions}
-                          </Typography>
+                            </Typography>
                           <StyledButton
-                            variant="contained"
-                            fullWidth
+                                variant="contained" 
+                                fullWidth
                             sx={{ mt: 2 }}
                             onClick={() => handleTestSelect(test)}
-                          >
+                              >
                             Start Test
                           </StyledButton>
-                        </CardContent>
+                          </CardContent>
                       </StyledCard>
-                    </Grid>
-                  ))}
-                </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
               </Box>
-            ))}
+              ))}
           </Box>
         )}
-
+        
         {/* Profile Tab */}
         {activeTab === 2 && (
           <Box sx={{ mt: 3 }}>
             <StyledPaper sx={{ p: 3, mb: 3 }}>
               {isEditingProfile ? (
-                <Box component="form" noValidate>
+                      <Box component="form" noValidate>
                   <Typography variant="h6" gutterBottom>
                     Edit Profile
-                  </Typography>
+                            </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Full Name"
-                        name="full_name"
-                        value={profileFormData.full_name || ''}
-                        onChange={handleProfileChange}
-                        error={!!profileErrors.full_name}
-                        helperText={profileErrors.full_name}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Email"
-                        name="email"
-                        type="email"
-                        value={profileFormData.email || ''}
-                        onChange={handleProfileChange}
-                        error={!!profileErrors.email}
-                        helperText={profileErrors.email}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Department"
-                        name="department"
-                        value={profileFormData.department || ''}
-                        onChange={handleProfileChange}
-                        error={!!profileErrors.department}
-                        helperText={profileErrors.department}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="Year of Study"
-                        name="year_of_study"
-                        type="number"
-                        value={profileFormData.year_of_study || ''}
-                        onChange={handleProfileChange}
-                        error={!!profileErrors.year_of_study}
-                        helperText={profileErrors.year_of_study}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label="CGPA"
-                        name="cgpa"
-                        type="number"
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="Full Name"
+                              name="full_name"
+                              value={profileFormData.full_name || ''}
+                              onChange={handleProfileChange}
+                              error={!!profileErrors.full_name}
+                              helperText={profileErrors.full_name}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="Email"
+                              name="email"
+                              type="email"
+                              value={profileFormData.email || ''}
+                              onChange={handleProfileChange}
+                              error={!!profileErrors.email}
+                              helperText={profileErrors.email}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="Department"
+                              name="department"
+                              value={profileFormData.department || ''}
+                              onChange={handleProfileChange}
+                              error={!!profileErrors.department}
+                              helperText={profileErrors.department}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="Year of Study"
+                              name="year_of_study"
+                              type="number"
+                              value={profileFormData.year_of_study || ''}
+                              onChange={handleProfileChange}
+                              error={!!profileErrors.year_of_study}
+                              helperText={profileErrors.year_of_study}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              fullWidth
+                              label="CGPA"
+                              name="cgpa"
+                              type="number"
                         inputProps={{ step: "0.01", min: "0", max: "10" }}
-                        value={profileFormData.cgpa || ''}
-                        onChange={handleProfileChange}
-                        error={!!profileErrors.cgpa}
+                              value={profileFormData.cgpa || ''}
+                              onChange={handleProfileChange}
+                              error={!!profileErrors.cgpa}
                         helperText={profileErrors.cgpa}
-                      />
-                    </Grid>
+                            />
+                          </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -2647,7 +2647,7 @@ const StudentDashboard = () => {
                         helperText={profileErrors.phone}
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                          <Grid item xs={12}>
                       <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                         <TextField
                           fullWidth
@@ -2662,13 +2662,13 @@ const StudentDashboard = () => {
                       </Box>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {profileFormData.skills?.map((skill, index) => (
-                          <Chip
-                            key={index}
-                            label={skill}
-                            onDelete={() => handleSkillRemove(skill)}
-                          />
-                        ))}
-                      </Box>
+                                <Chip
+                                  key={index}
+                                  label={skill}
+                                  onDelete={() => handleSkillRemove(skill)}
+                                />
+                              ))}
+                            </Box>
                       {profileErrors.skills && (
                         <Typography color="error" variant="caption">
                           {profileErrors.skills}
@@ -2676,18 +2676,18 @@ const StudentDashboard = () => {
                       )}
                     </Grid>
                     <Grid item xs={12}>
-                      <TextField
+                              <TextField
                         fullWidth
                         label="Resume URL"
                         name="resume_url"
                         value={profileFormData.resume_url}
-                        onChange={handleProfileChange}
+                                onChange={handleProfileChange}
                         helperText="Link to your resume (Google Drive, Dropbox, etc.)"
                       />
-                    </Grid>
+                          </Grid>
                     <Grid item xs={12}>
                       <TextField
-                        fullWidth
+                              fullWidth
                         label="GitHub Profile URL"
                         name="github_url"
                         value={profileFormData.github_url}
@@ -2708,9 +2708,9 @@ const StudentDashboard = () => {
                   </Grid>
                   <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
                     <StyledButton
-                      variant="contained"
-                      onClick={handleProfileSubmit}
-                      disabled={isSubmittingProfile}
+                              variant="contained"
+                              onClick={handleProfileSubmit}
+                              disabled={isSubmittingProfile}
                     >
                       {isSubmittingProfile ? 'Saving...' : 'Save Profile'}
                     </StyledButton>
@@ -2719,7 +2719,7 @@ const StudentDashboard = () => {
                       onClick={() => setIsEditingProfile(false)}
                     >
                       Cancel
-                    </Button>
+                            </Button>
                   </Box>
                 </Box>
               ) : (
@@ -2727,7 +2727,7 @@ const StudentDashboard = () => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h6">
                       Profile Information
-                    </Typography>
+                            </Typography>
                     <StyledButton
                       variant="contained"
                       onClick={() => setIsEditingProfile(true)}
@@ -2739,11 +2739,11 @@ const StudentDashboard = () => {
                     <Grid item xs={12} sm={6}>
                       <Typography variant="subtitle2">Full Name</Typography>
                       <Typography variant="body1">{profile?.full_name || 'Not set'}</Typography>
-                    </Grid>
+                          </Grid>
                     <Grid item xs={12} sm={6}>
                       <Typography variant="subtitle2">Email</Typography>
                       <Typography variant="body1">{profile?.email || 'Not set'}</Typography>
-                    </Grid>
+                        </Grid>
                     <Grid item xs={12} sm={6}>
                       <Typography variant="subtitle2">Department</Typography>
                       <Typography variant="body1">{profile?.department || 'Not set'}</Typography>
@@ -2799,10 +2799,10 @@ const StudentDashboard = () => {
 
             {/* Application Status Section */}
             <StyledPaper sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Application Status
-              </Typography>
-              {Object.keys(applicationStatuses).length > 0 ? (
+                    <Typography variant="h6" gutterBottom>
+                      Application Status
+                    </Typography>
+                    {Object.keys(applicationStatuses).length > 0 ? (
                 <Grid container spacing={2}>
                   {Object.entries(applicationStatuses).map(([companyId, data]) => (
                     <Grid item xs={12} sm={6} md={4} key={companyId}>
@@ -2812,38 +2812,38 @@ const StudentDashboard = () => {
                             <Typography variant="subtitle1" fontWeight="bold">
                               {data.companyName}
                             </Typography>
-                            <Chip
+                              <Chip
                               label={data.status.charAt(0).toUpperCase() + data.status.slice(1)}
-                              color={
+                                color={
                                 data.status === 'accepted' ? 'success' :
                                 data.status === 'rejected' ? 'error' :
                                 data.status === 'pending' ? 'warning' : 'default'
-                              }
-                              size="small"
-                            />
+                                }
+                                size="small"
+                              />
                           </Box>
-                          <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary">
                             Application Date: {new Date(data.applied_at || Date.now()).toLocaleDateString()}
-                          </Typography>
+                      </Typography>
                           {data.feedback && (
                             <Box sx={{ mt: 1 }}>
                               <Typography variant="body2" fontWeight="medium">
                                 Feedback:
-                              </Typography>
+          </Typography>
                               <Typography variant="body2">
                                 {data.feedback}
-                              </Typography>
-                            </Box>
+              </Typography>
+              </Box>
                           )}
                           {data.interview_date && (
                             <Box sx={{ mt: 1 }}>
                               <Typography variant="body2" fontWeight="medium">
                                 Interview Scheduled:
-                              </Typography>
-                              <Typography variant="body2">
+                    </Typography>
+                    <Typography variant="body2">
                                 {new Date(data.interview_date).toLocaleString()}
-                              </Typography>
-                            </Box>
+                    </Typography>
+                  </Box>
                           )}
                         </CardContent>
                       </StyledCard>
@@ -2856,7 +2856,7 @@ const StudentDashboard = () => {
                 </Typography>
               )}
             </StyledPaper>
-          </Box>
+            </Box>
         )}
 
         {/* Notifications */}
@@ -2875,33 +2875,33 @@ const StudentDashboard = () => {
         </Snackbar>
 
         {/* Test Dialog */}
-        <Dialog
-          open={openTestDialog}
-          onClose={() => setOpenTestDialog(false)}
-          maxWidth="sm"
-          fullWidth
-        >
+      <Dialog
+        open={openTestDialog}
+        onClose={() => setOpenTestDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
           <DialogTitle>
             Start {selectedTest?.name}
           </DialogTitle>
-          <DialogContent>
-            <Typography variant="body1" paragraph>
+        <DialogContent>
+              <Typography variant="body1" paragraph>
               Duration: {selectedTest?.duration}
-            </Typography>
+              </Typography>
             <Typography variant="body1">
               Number of Questions: {selectedTest?.questions}
-            </Typography>
-          </DialogContent>
-          <DialogActions>
+                </Typography>
+        </DialogContent>
+        <DialogActions>
             <Button onClick={() => setOpenTestDialog(false)}>Cancel</Button>
             <StyledButton onClick={startTest} variant="contained">
-              Start Test
+            Start Test
             </StyledButton>
-          </DialogActions>
-        </Dialog>
+        </DialogActions>
+      </Dialog>
 
         {/* Customize Resume Dialog */}
-        <Dialog
+      <Dialog
           open={openCustomizeDialog}
           onClose={() => setOpenCustomizeDialog(false)}
           maxWidth="md"
@@ -2914,7 +2914,7 @@ const StudentDashboard = () => {
             <Box sx={{ mt: 2 }}>
               <Typography variant="subtitle1" gutterBottom>
                 Company Requirements:
-              </Typography>
+                </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                 {selectedCompany?.job_requirements?.split(',').map((req, idx) => {
                   const reqTrimmed = req.trim();
@@ -2925,35 +2925,35 @@ const StudentDashboard = () => {
                     <Chip
                       key={idx}
                       label={reqTrimmed}
-                      size="small"
+                    size="small"
                       variant="outlined"
-                      sx={{
+                        sx={{ 
                         borderColor: isMatched ? 'success.main' : 'error.main',
                         borderWidth: '2px',
                         '& .MuiChip-label': {
                           color: isMatched ? 'success.main' : 'error.main',
-                        }
-                      }}
-                    />
+                          }
+                        }}
+                      />
                   );
                 })}
-              </Box>
+                  </Box>
               
               <Typography variant="subtitle1" gutterBottom>
                 Your Matching Skills:
-              </Typography>
+                    </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
                 {resumeAnalysis?.skills.map((skill, index) => (
                   <Chip
-                    key={index}
+                        key={index} 
                     label={skill}
                     size="small"
                     color="primary"
                     variant="outlined"
                   />
-                ))}
-              </Box>
-
+                          ))}
+                        </Box>
+                        
               <TextField
                 fullWidth
                 multiline
@@ -2963,15 +2963,15 @@ const StudentDashboard = () => {
                 onChange={(e) => setCustomizedNotes(e.target.value)}
                 placeholder="Add any specific points you want to highlight for this company..."
               />
-            </Box>
+                </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpenCustomizeDialog(false)}>
               Cancel
             </Button>
             <StyledButton
-              variant="contained"
-              onClick={() => {
+                  variant="contained"
+                  onClick={() => {
                 handleApply(selectedCompany.company_id, selectedCompany.company_name);
                 setCustomizedNotes('');
               }}
@@ -2979,7 +2979,7 @@ const StudentDashboard = () => {
               Apply with Customized Resume
             </StyledButton>
           </DialogActions>
-        </Dialog>
+      </Dialog>
       </Box>
     </Box>
   );

@@ -88,8 +88,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
-  width: '64px',
-  height: '64px',
+  width: { xs: '48px', md: '64px' },
+  height: { xs: '48px', md: '64px' },
   borderRadius: '50%',
   display: 'flex',
   alignItems: 'center',
@@ -116,12 +116,20 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '&:hover': {
       background: 'rgba(255, 255, 255, 0.95)',
     },
+    [theme.breakpoints.down('sm')]: {
+      '& .MuiInputBase-input': {
+        padding: '12px 14px',
+      }
+    }
   },
   '& .MuiInputLabel-root': {
     color: 'rgba(25, 118, 210, 0.7)',
     '&.Mui-focused': {
       color: '#1976d2',
     },
+    [theme.breakpoints.down('sm')]: {
+      transform: 'translate(14px, 12px) scale(1)',
+    }
   },
 }));
 
@@ -145,6 +153,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
     background: 'rgba(25, 118, 210, 0.12)',
     color: 'rgba(25, 118, 210, 0.5)',
   },
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(1),
+    fontSize: '0.9rem',
+  }
 }));
 
 const SlidingFeatureBox = styled(Box)(({ theme, index }) => ({
@@ -294,21 +306,34 @@ const StudentAuth = () => {
       <DecorativeShape sx={{ width: '100px', height: '100px', bottom: '30%', left: '5%' }} />
 
       {/* Main content */}
-      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, py: 8 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, py: { xs: 4, md: 8 } }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '80vh',
+          gap: { xs: 4, md: 0 }
+        }}>
           {/* Login Form Container */}
           <Box
             sx={{
-              width: '400px',
+              width: { xs: '90%', sm: '400px' },
               position: 'relative',
               zIndex: 1,
-              ml: '5%',
-              height: '80vh',
+              ml: { xs: 0, md: '5%' },
+              height: { xs: 'auto', md: '80vh' },
               display: 'flex',
               alignItems: 'center',
             }}
           >
-            <StyledPaper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <StyledPaper elevation={3} sx={{ 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column',
+              width: '100%',
+              p: { xs: 3, md: 4 }
+            }}>
               {/* Logo */}
               <LogoContainer>
                 <School sx={{ fontSize: 32, color: 'white' }} />
@@ -465,12 +490,12 @@ const StudentAuth = () => {
           {/* Sliding Feature Boxes Container */}
           <Box
             sx={{
-              width: '60%',
-              ml: 4,
-              height: '80vh',
+              width: { xs: '90%', md: '60%' },
+              ml: { xs: 0, md: 4 },
+              height: { xs: '400px', md: '80vh' },
               position: 'relative',
               overflow: 'hidden',
-              display: 'flex',
+              display: { xs: 'none', md: 'flex' },
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -478,7 +503,7 @@ const StudentAuth = () => {
             <Box
               sx={{
                 width: '100%',
-                height: '80vh',
+                height: { xs: '400px', md: '80vh' },
                 position: 'relative',
                 overflow: 'hidden',
               }}
@@ -491,6 +516,9 @@ const StudentAuth = () => {
                     width: '90%',
                     left: '50%',
                     transform: 'translateX(-50%)',
+                    '@media (max-width: 600px)': {
+                      padding: '20px',
+                    }
                   }}
                 >
                   <FeatureImage
@@ -498,7 +526,7 @@ const StudentAuth = () => {
                     alt={feature.title}
                     loading="lazy"
                     sx={{
-                      height: '300px',
+                      height: { xs: '200px', md: '300px' },
                     }}
                   />
                   <Box sx={{ color: '#1976d2' }}>
