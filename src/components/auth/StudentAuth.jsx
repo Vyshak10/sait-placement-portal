@@ -303,7 +303,9 @@ const StudentAuth = () => {
               position: 'relative',
               zIndex: 1,
               ml: '5%',
-              height: '75vh',
+              height: '80vh',
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <StyledPaper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
