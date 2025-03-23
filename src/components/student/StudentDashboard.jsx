@@ -2769,6 +2769,18 @@ const StudentDashboard = () => {
                       </Box>
                     </Grid>
                     <Grid item xs={12}>
+                      <Typography variant="subtitle2">Resume</Typography>
+                      {profile?.resume_url ? (
+                        <Typography variant="body1">
+                          <a href={profile.resume_url} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2', textDecoration: 'none' }}>
+                            View Resume
+                          </a>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body1">Not set</Typography>
+                      )}
+                    </Grid>
+                    <Grid item xs={12}>
                       <Typography variant="subtitle2">LinkedIn Profile</Typography>
                       {profile?.linkedin_url ? (
                         <Typography variant="body1">

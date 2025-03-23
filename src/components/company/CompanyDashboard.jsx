@@ -878,6 +878,13 @@ const CompanyDashboard = () => {
                     </a>
                   </Typography>
                 )}
+                {selectedStudent.resume_url && (
+                  <Typography variant="body1">
+                    Resume: <a href={selectedStudent.resume_url} target="_blank" rel="noopener noreferrer" style={{ color: '#1976d2', textDecoration: 'none' }}>
+                      {selectedStudent.resume_url}
+                    </a>
+                  </Typography>
+                )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="h6">Skills</Typography>
