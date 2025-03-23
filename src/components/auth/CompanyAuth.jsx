@@ -207,8 +207,14 @@ const CompanyAuth = () => {
       }
 
       // Validate required fields
-      if (!formData.company_name || !formData.industry) {
-        throw new Error('Company name and industry are required');
+      if (!formData.company_name || !formData.industry || !formData.email) {
+        throw new Error('Company name, industry, and email are required');
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address');
       }
 
       // Register - first check if company already exists
@@ -227,7 +233,7 @@ const CompanyAuth = () => {
         throw new Error('Company already registered. Please use the login option.');
       }
 
-      // Create new company profile
+      // Create new company profile with only required fields
       const { data: newCompany, error: insertError } = await supabase
         .from('companies')
         .insert([{
@@ -237,10 +243,8 @@ const CompanyAuth = () => {
           job_description: formData.job_description || null,
           location: formData.location || null,
           salary_range: formData.salary_range || null,
-          email: formData.email || null,
-          phone: formData.phone || null,
           verified: true,
-          auth_id: `auth_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`
+          auth_id: crypto.randomUUID()
         }])
         .select()
         .single();
@@ -446,6 +450,7 @@ const CompanyAuth = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <StyledTextField
+                          required
                           fullWidth
                           label="Email"
                           name="email"

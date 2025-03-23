@@ -2980,6 +2980,227 @@ const StudentDashboard = () => {
             </StyledButton>
           </DialogActions>
         </Dialog>
+
+        {/* Test Questions UI */}
+        {testInProgress && selectedTest && mockTestQuestions[selectedTest.id] && (
+          <Dialog
+            open={true}
+            maxWidth="xl"
+            fullScreen
+            disableEscapeKeyDown
+            PaperProps={{
+              sx: {
+                background: 'linear-gradient(to bottom, #f5f5f5, #ffffff)',
+              }
+            }}
+          >
+            <AppBar position="static" sx={{ background: 'linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)' }}>
+              <Toolbar>
+                <Typography variant="h6" sx={{ flexGrow: 1 }}>{selectedTest.name}</Typography>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  bgcolor: 'rgba(255, 255, 255, 0.1)', 
+                  px: 2, 
+                  py: 0.5, 
+                  borderRadius: 2 
+                }}>
+                  <AccessTimeIcon sx={{ mr: 1 }} />
+                  <Typography>Time Remaining: {formatTime(timeRemaining)}</Typography>
+                </Box>
+              </Toolbar>
+            </AppBar>
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              {/* Progress Bar */}
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="body2">
+                    Question {activeQuestion + 1} of {mockTestQuestions[selectedTest.id].length}
+                  </Typography>
+                  <Typography variant="body2">
+                    Progress: {Math.round((Object.keys(selectedAnswers).length / mockTestQuestions[selectedTest.id].length) * 100)}%
+                  </Typography>
+                </Box>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={(activeQuestion + 1) / mockTestQuestions[selectedTest.id].length * 100}
+                  sx={{ height: 8, borderRadius: 4 }}
+                />
+              </Box>
+
+              {/* Question Card */}
+              <Paper 
+                elevation={3} 
+                sx={{ 
+                  p: 4, 
+                  borderRadius: 2,
+                  background: '#ffffff',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <Typography 
+                  variant="h5" 
+                  gutterBottom 
+                  sx={{ 
+                    color: '#1976d2',
+                    fontWeight: 500,
+                    mb: 3
+                  }}
+                >
+                  {mockTestQuestions[selectedTest.id][activeQuestion].question}
+                </Typography>
+
+                <Grid container spacing={2}>
+                  {mockTestQuestions[selectedTest.id][activeQuestion].options.map((option, index) => (
+                    <Grid item xs={12} key={index}>
+                      <Button
+                        variant={selectedAnswers[activeQuestion] === index ? "contained" : "outlined"}
+                        color={
+                          showAnswers[activeQuestion]
+                            ? index === mockTestQuestions[selectedTest.id][activeQuestion].correctAnswer
+                              ? "success"
+                              : selectedAnswers[activeQuestion] === index
+                              ? "error"
+                              : "primary"
+                            : "primary"
+                        }
+                        fullWidth
+                        onClick={() => handleAnswerSelect(activeQuestion, index)}
+                        sx={{ 
+                          justifyContent: 'flex-start', 
+                          textAlign: 'left',
+                          p: 2,
+                          borderRadius: 2,
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)'
+                          }
+                        }}
+                      >
+                        <Typography variant="body1">
+                          {String.fromCharCode(65 + index)}. {option}
+                        </Typography>
+                      </Button>
+                    </Grid>
+                  ))}
+                </Grid>
+
+                {showAnswers[activeQuestion] && (
+                  <Box sx={{ mt: 3, p: 2, bgcolor: 'success.light', borderRadius: 2 }}>
+                    <Typography variant="body1" color="white">
+                      Correct Answer: {String.fromCharCode(65 + mockTestQuestions[selectedTest.id][activeQuestion].correctAnswer)}
+                    </Typography>
+                  </Box>
+                )}
+              </Paper>
+
+              {/* Navigation Buttons */}
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                mt: 4,
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                bgcolor: 'background.paper',
+                p: 2,
+                boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)'
+              }}>
+                <Box>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigateQuestion('prev')}
+                    disabled={activeQuestion === 0}
+                    startIcon={<ArrowBackIcon />}
+                    sx={{ mr: 1 }}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigateQuestion('next')}
+                    disabled={activeQuestion === mockTestQuestions[selectedTest.id].length - 1}
+                    endIcon={<ArrowForwardIcon />}
+                  >
+                    Next
+                  </Button>
+                </Box>
+                <Box>
+                  <Button
+                    variant="outlined"
+                    onClick={() => toggleShowAnswer(activeQuestion)}
+                    color="info"
+                    sx={{ mr: 1 }}
+                  >
+                    Show Answer
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={completeTest}
+                    endIcon={<CheckCircleIcon />}
+                  >
+                    Complete Test
+                  </Button>
+                </Box>
+              </Box>
+            </Container>
+          </Dialog>
+        )}
+
+        {/* Test Results Dialog */}
+        {testCompleted && (
+          <Dialog
+            open={true}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+              sx: {
+                borderRadius: 2,
+                background: 'linear-gradient(to bottom, #f5f5f5, #ffffff)',
+              }
+            }}
+          >
+            <DialogTitle sx={{ textAlign: 'center', pt: 4 }}>Test Results</DialogTitle>
+            <DialogContent>
+              <Box sx={{ p: 4, textAlign: 'center' }}>
+                <Typography variant="h3" gutterBottom color="primary">
+                  {testScore}%
+                </Typography>
+                <Box sx={{ 
+                  p: 2, 
+                  bgcolor: testScore >= 70 ? 'success.light' : 'error.light',
+                  borderRadius: 2,
+                  mb: 3
+                }}>
+                  <Typography variant="h6" color="white">
+                    {testScore >= 70 ? "Congratulations! You passed the test." : "Keep practicing to improve your score."}
+                  </Typography>
+                </Box>
+                <Typography variant="body1" color="text.secondary" paragraph>
+                  You answered {Object.keys(selectedAnswers).length} out of {mockTestQuestions[selectedTest.id].length} questions.
+                </Typography>
+              </Box>
+            </DialogContent>
+            <DialogActions sx={{ p: 3, justifyContent: 'center' }}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setTestCompleted(false);
+                  setSelectedTest(null);
+                  setSelectedAnswers({});
+                  setShowAnswers({});
+                }}
+                sx={{ minWidth: 200 }}
+              >
+                Return to Dashboard
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </Box>
     </Box>
   );
