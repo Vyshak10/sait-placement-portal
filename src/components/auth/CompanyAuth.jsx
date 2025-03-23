@@ -201,8 +201,8 @@ const CompanyAuth = () => {
         // Store company info in localStorage for persistence
         localStorage.setItem('companyData', JSON.stringify(company));
         
-        // Force navigation after setting localStorage
-        window.location.href = '/company/dashboard';
+        // Use navigate instead of window.location
+        navigate('/company/dashboard', { replace: true });
         return;
       }
 

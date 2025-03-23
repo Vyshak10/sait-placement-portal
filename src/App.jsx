@@ -287,8 +287,20 @@ const AdminRoute = ({ children }) => {
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <LandingPage />,
+    path: '/',
+    element: <LandingPage />
+  },
+  {
+    path: '/company/auth',
+    element: <CompanyAuth />
+  },
+  {
+    path: '/company/dashboard',
+    element: (
+      <CompanyRoute>
+        <CompanyDashboard />
+      </CompanyRoute>
+    )
   },
   {
     path: "/auth",
@@ -301,10 +313,6 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
-  },
-  {
-    path: "/company/auth",
-    element: <CompanyAuth />,
   },
   {
     path: "/admin/login",
@@ -344,33 +352,18 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/company",
-    children: [
-      {
-        path: "dashboard",
-        element: (
-          <CompanyRoute>
-            <CompanyDashboard />
-          </CompanyRoute>
-        ),
-      },
-    ],
-  },
-  {
     path: "*",
     element: <Navigate to="/" replace />,
   },
-]);
+], {
+  basename: '/' // Explicitly set the base URL
+});
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ 
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh'
-      }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <RouterProvider router={router} />
       </Box>
     </ThemeProvider>

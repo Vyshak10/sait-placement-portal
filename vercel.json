@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+    {
+      "src": "/company/auth",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/company/dashboard",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+} 
